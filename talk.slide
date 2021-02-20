@@ -1,0 +1,80 @@
+GoでDiscordボットを作る（2021年版）
+Kyoto.go #17
+21 Jan 2021
+
+yebis0942
+
+* Discordボット
+
+- 人間がDiscord上で命令したら何かやってくれたりするアプリ
+- ChatOpsってやつです
+- 「LT開始」とポストしたら5分後にベルを鳴らしてほしい、とか
+- Discordのボットは音も出せる！
+- （録音もできるけど録画はできない）
+
+* Goのライブラリ
+
+有力なのはこの2つ。
+
+- https://github.com/bwmarrin/discordgo
+- https://github.com/diamondburned/arikawa/
+
+* bwmarrin/discordgo
+
+- 先発
+- awesome-goに乗ってる
+- スター多い
+- exampleが充実している
+
+* diamondburned/arikawa
+
+- 後発
+- スターは少なめ
+- discordgoよりコード整理されている（とREADMEには書かれている）
+- discordgoよりレイヤー分けが細かいぶん、アプリケーションコードは冗長になる傾向がある気がする
+- こっちもexampleが比較的充実している
+- （ところでarikawaとは…？）
+
+* どっちを使うべきか
+
+- 両方でボットを書いてみた
+- この程度ならどっちでもよさそう
+- まずはdiscordgoで書いてみて、不満があったらarikawaも検討してみる、という感じがいいのではないかなーと思います
+
+* Slash Commands
+
+- 昨年末にDiscordに追加された新機能
+- bot向けのコマンドの入力支援
+- 「この引数は必須」とか「この引数はこの選択肢のどれか」みたいな制約を指定できる
+- Discordの入力欄に`/`を入れるとビルトインのcommandsが出てきます
+
+* 2つのライブラリの対応状況は？
+
+どちらもWork in Progress
+
+* bwmarrin/discordgo
+
+- [[https://github.com/bwmarrin/discordgo/blob/ad76e324502b76c7507178ed07b242841c0724a4/interactions.go][DiscordサーバーからのWebhookを検証するヘルパーメソッド]]が用意されている
+- 他のPRも出てる
+- [[コマンドの登録とルーティングをいい感じにやってくれるようになる予定][https://github.com/bwmarrin/discordgo/pull/856/files#diff-20a180d42cb406f9578ddcd7228e219fb98d12f9f83648aada9e18a5be1cf207]]
+- diffが大きいせいかレビューに時間がかかってる
+
+* diamondburned/arikawa
+
+- [[https://github.com/diamondburned/arikawa/issues/176][こちらも作業中]]
+- すでにWebsocketベースではいい感じにやってくれるようになっている
+- Webhookの対応はこれから
+
+* Slash CommandsはWebhookベース
+
+- これまではメッセージに反応するDiscordボットはWebsocketで実装する必要があった
+- 定期的にpingを返さないといけないのでボットプロセスは常に立ち上げなければいけない
+- Slash CommandsはWebhookで入力を受け取れる
+- サーバーレスにしやすくなった
+
+* まとめ
+
+- GoでDiscordのボットを実装するときには [[https://github.com/bwmarrin/discordgo][github.com/bwmarrin/discordgo]] と [[https://github.com/diamondburned/arikawa][github.com/diamondburned/arikawa]] がおすすめ
+- Slash Commandsが登場したことでボットが実装しやすくなり、サーバーレスで動かすことが可能になった
+- いまのところ個人的にはdiscordgoが第一選択肢だが…
+- Slash commandsの対応方針によってはarikawaのほうが有力になるかも
